@@ -7,9 +7,11 @@ For neovim I just used ![kickstart.nvim](https://github.com/nvim-lua/kickstart.n
 For the commands I used to run python, and with the power of the terminal you can make usual tasks really easy, Here is how:
 
 I created this function in my ![fish](https://fishshell.com/) config:
-`function py
+```
+function py
     python -i "$argv"
-end`
+end
+```
 this let's me run the file like `py main.py` and after it is finished it will put me into the interactive python shell, was really useful for debugging and performing small queries on the dataframes.
 Yes, I could've used `python -i main.py`, but come on we love aliases. :D
 
