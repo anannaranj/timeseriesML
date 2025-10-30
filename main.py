@@ -49,3 +49,15 @@ yweek1 = week1["active_energy"]
 # plt.plot(yweek1)
 # plt.plot(pd.DataFrame(result, index=yweek1.index))
 # plt.show()
+
+
+# # # # try number 2:
+# model = xgb.XGBRegressor(n_estimators=4500, learning_rate=0.8,
+#                          random_state=1)
+# model.fit(xtrain, ytrain, eval_set=[(xtrain, ytrain)],  verbose=True)
+# result = model.predict(xweek1)
+#
+# plt.plot(yweek1)
+# plt.plot(pd.DataFrame(result, index=yweek1.index))
+# plt.show()
+# # # # best rmse is 1.666
