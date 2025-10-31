@@ -56,6 +56,23 @@ def asFreq(df, freq):
     return data
 
 
+def seasonalDecomposition(df):
+    hours = asFreq(df, "h")
+    result = seasonal_decompose(hours["active_energy"])
+    plt.plot(hours["active_energy"], label="Hours", color="#35567e")
+    plt.legend()
+    plt.show()
+    plt.plot(result.trend, label="Hours Trend", color="#35567e")
+    plt.legend()
+    plt.show()
+    plt.plot(result.seasonal, label="Hours Seasonal", color="#35567e")
+    plt.legend()
+    plt.show()
+    plt.plot(result.resid, label="Hours Residual", color="#35567e")
+    plt.legend()
+    plt.show()
+
+
 def seasonalDecompositionVisualization(df):
     days = asFreq(df, "D")
     daysResult = seasonal_decompose(days["active_energy"])

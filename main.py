@@ -1,7 +1,9 @@
-from cleaning import cleaning, asFreq
+from cleaning import cleaning, asFreq, seasonalDecomposition
+from xgb import try1, try2
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import xgboost as xgb
+
 
 # get cleaned Dataframe
 df = cleaning()
@@ -15,12 +17,22 @@ df = asFreq(df, "h")
 df = df["active_energy"]
 df = df.to_frame()
 
+df["active_energy"] = np.where(
+    df["active_energy"] > 125, np.nan, df["active_energy"])
+df.interpolate(inplace=True)
+
 df["year"] = df.index.year
 df["dayofyear"] = df.index.dayofyear
 df["quarter"] = df.index.quarter
 df["month"] = df.index.month
 df["dayofweek"] = df.index.dayofweek
 df["hour"] = df.index.hour
+
+df["weekend"] = df.index.dayofweek >= 5
+df["holiday"] = ((df.index.month == 7) |
+                 ((df.index.month == 8) & (df.index.day <= 15)) |
+                 ((df.index.month == 12) & (df.index.day >= 20)) |
+                 ((df.index.month == 1) & (df.index.day <= 5)))
 
 # in a timeseries forecasting project the only
 # column you need to train on is the datetime
@@ -35,29 +47,11 @@ ytrain = train["active_energy"]
 xtest = test[vars]
 ytest = test["active_energy"]
 
-
 week1 = df[(df.index >= "2010-5-15") & (df.index <= "2010-5-22")]
 xweek1 = week1[vars]
 yweek1 = week1["active_energy"]
 
+# seasonalDecomposition(df)
 
-# # # # try number 1:
-# model = xgb.XGBRegressor()
-# model.fit(xtrain, ytrain)
-# result = model.predict(xweek1)
-#
-# plt.plot(yweek1)
-# plt.plot(pd.DataFrame(result, index=yweek1.index))
-# plt.show()
-
-
-# # # # try number 2:
-# model = xgb.XGBRegressor(n_estimators=4500, learning_rate=0.8,
-#                          random_state=1)
-# model.fit(xtrain, ytrain, eval_set=[(xtrain, ytrain)],  verbose=True)
-# result = model.predict(xweek1)
-#
-# plt.plot(yweek1)
-# plt.plot(pd.DataFrame(result, index=yweek1.index))
-# plt.show()
-# # # # best rmse is 1.666
+# try1(xtrain, ytrain, xweek1, yweek1)
+# try2(xtrain, ytrain, xweek1, yweek1)
