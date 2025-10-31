@@ -24,6 +24,7 @@ df.interpolate(inplace=True)
 df["year"] = df.index.year
 df["dayofyear"] = df.index.dayofyear
 df["quarter"] = df.index.quarter
+df["season"] = (df.index.month % 12 + 3) // 3
 df["month"] = df.index.month
 df["dayofweek"] = df.index.dayofweek
 df["hour"] = df.index.hour
