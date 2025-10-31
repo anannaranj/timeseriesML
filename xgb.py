@@ -27,3 +27,10 @@ def try2(xtrain, ytrain, xdata, ydata):
     plt.plot(pd.DataFrame(result, index=ydata.index))
     plt.show()
     # # # best rmse is 1.666
+
+
+def XGB(xtrain, ytrain):
+    model = xgb.XGBRegressor(n_estimators=50000, learning_rate=0.2,
+                             random_state=1, early_stopping_rounds=50)
+    model.fit(xtrain, ytrain, eval_set=[(xtrain, ytrain)],  verbose=True)
+    return model
