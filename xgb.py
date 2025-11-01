@@ -30,7 +30,9 @@ def try2(xtrain, ytrain, xdata, ydata):
 
 
 def XGB(xtrain, ytrain):
-    model = xgb.XGBRegressor(n_estimators=50000, learning_rate=0.2,
-                             random_state=1, early_stopping_rounds=50)
-    model.fit(xtrain, ytrain, eval_set=[(xtrain, ytrain)],  verbose=True)
+    # # # # {'learning_rate': 0.01, 'max_depth': 5, 'n_estimators': 500}
+    model = xgb.XGBRegressor(n_estimators=500, learning_rate=0.01,
+                             random_state=42, early_stopping_rounds=10,
+                             max_depth=7)
+    model.fit(xtrain, ytrain, eval_set=[(xtrain, ytrain)], verbose=10)
     return model

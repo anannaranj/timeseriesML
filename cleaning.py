@@ -47,12 +47,12 @@ def cleaning():
     df.drop(index=df[(df["active_energy"].isnull()) & (
         df["active_energy"].shift().isnull())].index, inplace=True)
     df.dropna(inplace=True)
-    return df
+    return df["active_energy"]
 
 
 def asFreq(df, freq):
     data = df.asfreq(freq)
-    data.interpolate(inplace=True)
+    # data.interpolate(inplace=True)
     return data
 
 
