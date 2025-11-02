@@ -1,5 +1,6 @@
-# Final Results
+# Final Results:
 
+## XGBoost:
 ### Train:
 MSE: 177.78
 
@@ -8,3 +9,14 @@ RMSE: 13.33
 MSE: 148.92
 
 RMSE: 12.20
+
+
+## Random Forest:
+### Train:
+MSE: 175.90746630050276
+
+RMSE: 13.26301120788574
+### Test:
+MSE: 148.11114264000327
+
+RMSE: 12.170092137695724

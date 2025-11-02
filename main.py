@@ -1,6 +1,5 @@
 from cleaning import cleaning, asFreq, seasonalDecomposition
-from xgb import try1, try2, XGB
-from sklearn.metrics import mean_squared_error, r2_score
+from models import XGB, RF, eval
 from sklearn.model_selection import GridSearchCV
 import xgboost as xgb
 import numpy as np
@@ -28,6 +27,8 @@ df["active_energy"] = np.where(
 df.dropna(inplace=True)
 # df.interpolate(inplace=True)
 
+
+# Create some features
 df["year"] = df.index.year
 df["dayofyear"] = df.index.dayofyear
 # df["quarter"] = df.index.quarter
@@ -53,6 +54,8 @@ df["workhour"] = ((df.index.hour >= 9) & (df.index.hour <= 17)
 train = df[df.index <= "2010-5"]
 test = df[df.index > "2010-5"]
 
+
+# I just didn't figure out how to do seasonal decomposition lol!
 # decomposition = seasonalDecomposition(train)
 
 # train['trend'] = decomposition.trend
@@ -64,6 +67,7 @@ test = df[df.index > "2010-5"]
 #     train.groupby(train.index.hour)['seasonal'].mean())
 # test['resid'] = pd.NA
 
+# Training and evaluating the models
 vars = list(set(train.columns) - set(["active_energy"]))
 
 xtrain = train[vars]
@@ -97,25 +101,31 @@ yweek1 = week1["active_energy"]
 # print("Best RMSE score: ", -grid_search.best_score_)
 # # # # 14.734954667237204
 
-model = XGB(xtrain, ytrain)
+# rf_reg = RandomForestRegressor()
+# param_grid = {
+#     'max_depth': [None, 5, 10, 15, 20],
+#     'n_estimators': [100, 200, 500],
+#     'min_samples_split': [2, 5],
+#     'min_samples_leaf': [1, 2],
+#     'bootstrap': [True, False]
+# }
+#
+# grid_search = GridSearchCV(
+#     estimator=rf_reg, param_grid=param_grid, scoring='neg_root_mean_squared_error', cv=3, n_jobs=-1)
+#
+# grid_search.fit(xtrain, ytrain)
+# print("Best parameters: ", grid_search.best_params_)
+# # # # Best parameters:  {'bootstrap': True, 'max_depth': 10, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 500}
+# print("Best RMSE score: ", -grid_search.best_score_)
+# # # # Best RMSE score:  15.203679142531392
 
-result = model.predict(xweek1)
-plt.plot(yweek1)
-plt.plot(pd.DataFrame(result, index=yweek1.index))
-plt.show()
-
+# xgbmodel = XGB(xtrain, ytrain)
+# eval(xgbmodel, xweek1, yweek1)
+rfmodel = RF(xtrain, ytrain)
 
 # Evaluation:
-trainpredict = model.predict(xtrain)
-print("MSE:", mean_squared_error(ytrain, trainpredict))
-print("RMSE:", np.sqrt(mean_squared_error(ytrain, trainpredict)))
-plt.plot(ytrain)
-plt.plot(pd.DataFrame(trainpredict, index=ytrain.index))
-plt.show()
+# eval(xgbmodel, xtrain, ytrain)
+# eval(xgbmodel, xtest, ytest)
 
-testpredict = model.predict(xtest)
-print("MSE:", mean_squared_error(ytest, testpredict))
-print("RMSE:", np.sqrt(mean_squared_error(ytest, testpredict)))
-plt.plot(ytest)
-plt.plot(pd.DataFrame(testpredict, index=ytest.index))
-plt.show()
+eval(rfmodel, xtrain, ytrain)
+eval(rfmodel, xtest, ytest)
