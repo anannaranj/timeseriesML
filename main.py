@@ -1,7 +1,6 @@
 from cleaning import cleaning, asFreq, seasonalDecomposition
 from models import XGB, RF, eval
 from sklearn.model_selection import GridSearchCV
-import xgboost as xgb
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -119,13 +118,15 @@ yweek1 = week1["active_energy"]
 # print("Best RMSE score: ", -grid_search.best_score_)
 # # # # Best RMSE score:  15.203679142531392
 
-# xgbmodel = XGB(xtrain, ytrain)
+# # # Creating the models
+xgbmodel = XGB(xtrain, ytrain)
 # eval(xgbmodel, xweek1, yweek1)
 rfmodel = RF(xtrain, ytrain)
+# eval(rfmodel, xweek1, yweek1)
 
 # Evaluation:
-# eval(xgbmodel, xtrain, ytrain)
-# eval(xgbmodel, xtest, ytest)
+eval(xgbmodel, xtrain, ytrain)
+eval(xgbmodel, xtest, ytest)
 
 eval(rfmodel, xtrain, ytrain)
 eval(rfmodel, xtest, ytest)
